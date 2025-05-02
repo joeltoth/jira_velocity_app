@@ -415,6 +415,11 @@ def RenderBody(selected_sprint_id=None, project_key=None, fix_version=None, epic
 
         df_tasks = pd.DataFrame(task_data)
 
+        # ✅ Calculate Earned Value
+        earned_value = df_tasks[
+            df_tasks["Status"].str.lower().isin(["done", "closed"])
+        ]["Estimated (hrs)"].sum()
+
         st.success(f"✅ Data fetched for {len(df_summary)} users and {len(df_tasks)} tasks.")
 
         with st.expander("⬇️ Summary - Assignee (Completed & Outstanding Tasks)👥"):
@@ -466,6 +471,7 @@ def RenderBody(selected_sprint_id=None, project_key=None, fix_version=None, epic
             else:
                 st.error(f"⚠️ Remaining Contingency: {round(remaining_contingency, 2)} hrs, we lost {round(total_overage, 2)} hrs")
 
+            st.info(f"📈 Earned Value (Completed Estimates): {round(earned_value, 2)} hrs")
 
         # === Summary - Development Assignee===
         df_summary_dev = pd.DataFrame([
@@ -533,6 +539,7 @@ def RenderBody(selected_sprint_id=None, project_key=None, fix_version=None, epic
             else:
                 st.error(f"⚠️ Remaining Contingency: {round(remaining_contingency, 2)} hrs, we lost {round(total_overage, 2)} hrs")
 
+            st.info(f"📈 Earned Value (Completed Estimates): {round(earned_value, 2)} hrs")
 
         # For session state after sorting / filtering etc
         st.session_state["issues"] = issues.copy()
@@ -849,6 +856,13 @@ def RenderBody(selected_sprint_id=None, project_key=None, fix_version=None, epic
 
                     cols = st.columns(len(assignee_totals_row))
                     style_totals(cols, assignee_totals_row)
+
+                    # ✅ Calculate Earned Value
+                    earned_value = assignee_all_tasks[
+                        assignee_all_tasks["Status"].str.lower().isin(["done", "closed"])
+                    ]["Estimated (hrs)"].sum()
+
+                    st.info(f"📈 Earned Value (Completed Estimates): {round(earned_value, 2)} hrs")
 
                     # Bar Chart: Flat Per-Task View (No Facet by Assignee)
                     st.subheader("📉 Issue Breakdown – All Tasks")
