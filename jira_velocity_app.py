@@ -151,8 +151,8 @@ with st.sidebar:
             st.rerun()
 
     st.header("🔐 Jira Connection")
-    jira_url = st.text_input("Jira URL", value="https://computronix.atlassian.net")
-    email = st.text_input("Email", value="joel.toth@computronix.com", help="Your Jira account email")
+    jira_url = st.text_input("Jira URL", value="https://yourdomain.atlassian.net")
+    email = st.text_input("Email", value="", help="Your Jira account email")
     # token = st.text_input("API Token", type="password")
     if st.session_state.get("authenticated", False):
         conn = sqlite3.connect("users.db")
