@@ -867,14 +867,14 @@ def RenderBody(selected_sprint_id=None, project_key=None, fix_version=None, epic
                     style_totals(cols, assignee_totals_row)
 
                     # ✅ Calculate Earned Value
-                    earned_value = assignee_all_tasks[
+                    assignee_earned_value = assignee_all_tasks[
                         assignee_all_tasks["Status"].str.lower().isin(["done", "closed"])
                     ]["Estimated (hrs)"].sum()
-                    earned_value = assignee_all_tasks[
+                    assignee_unearned_value = assignee_all_tasks[
                         ~assignee_all_tasks["Status"].str.lower().isin(["done", "closed"])
                     ]["Estimated (hrs)"].sum()
-                    st.success(f"📈 Earned Value (Completed Estimates): {round(earned_value, 2)} hrs")
-                    st.error(f"📈 Unearned Value (Incomplete Estimates): {round(unearned_value, 2)} hrs")
+                    st.success(f"📈 Earned Value (Completed Estimates): {round(assignee_earned_value, 2)} hrs")
+                    st.error(f"📈 Unearned Value (Incomplete Estimates): {round(assignee_unearned_value, 2)} hrs")
 
 
                     total_overage = assignee_all_tasks["Overage (hrs)"].sum()
