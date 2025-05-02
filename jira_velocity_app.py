@@ -419,6 +419,9 @@ def RenderBody(selected_sprint_id=None, project_key=None, fix_version=None, epic
         earned_value = df_tasks[
             df_tasks["Status"].str.lower().isin(["done", "closed"])
         ]["Estimated (hrs)"].sum()
+        unearned_value = df_tasks[
+            ~df_tasks["Status"].str.lower().isin(["done", "closed"])
+        ]["Estimated (hrs)"].sum()
 
         st.success(f"✅ Data fetched for {len(df_summary)} users and {len(df_tasks)} tasks.")
 
@@ -539,7 +542,9 @@ def RenderBody(selected_sprint_id=None, project_key=None, fix_version=None, epic
             else:
                 st.error(f"⚠️ Remaining Contingency: {round(remaining_contingency, 2)} hrs, we lost {round(total_overage, 2)} hrs")
 
-            st.info(f"📈 Earned Value (Completed Estimates): {round(earned_value, 2)} hrs")
+            #st.info(f"📈 Earned Value (Completed Estimates): {round(earned_value, 2)} hrs")
+            st.success(f"📈 Earned Value (Completed Estimates): {round(earned_value, 2)} hrs")
+            st.error(f"📈 Unearned Value (Incomplete Estimates): {round(unearned_value, 2)} hrs")
 
         # For session state after sorting / filtering etc
         st.session_state["issues"] = issues.copy()
@@ -857,12 +862,23 @@ def RenderBody(selected_sprint_id=None, project_key=None, fix_version=None, epic
                     cols = st.columns(len(assignee_totals_row))
                     style_totals(cols, assignee_totals_row)
 
+                    total_overage = df_summary["Overage (hrs)"].sum()
+                    remaining_contingency = contingency_hours - total_overage
+                    # st.success(f"Remaining Contingency: {round(remaining_contingency, 2)} hrs")
+                    if remaining_contingency >= contingency_hours:
+                        st.success(f"✅ Contingency gained {round(total_overage, 2)} hrs")
+                    else:
+                        st.error(f"⚠️ Contingency lost {round(total_overage, 2)} hrs")
+
                     # ✅ Calculate Earned Value
                     earned_value = assignee_all_tasks[
                         assignee_all_tasks["Status"].str.lower().isin(["done", "closed"])
                     ]["Estimated (hrs)"].sum()
-
+                    earned_value = assignee_all_tasks[
+                        ~assignee_all_tasks["Status"].str.lower().isin(["done", "closed"])
+                    ]["Estimated (hrs)"].sum()
                     st.info(f"📈 Earned Value (Completed Estimates): {round(earned_value, 2)} hrs")
+                    st.error(f"📈 Unearned Value (Incomplete Estimates): {round(unearned_value, 2)} hrs")
 
                     # Bar Chart: Flat Per-Task View (No Facet by Assignee)
                     st.subheader("📉 Issue Breakdown – All Tasks")
