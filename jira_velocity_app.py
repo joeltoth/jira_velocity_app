@@ -44,7 +44,7 @@ def decrypt_api_token(token: str) -> str:
 
 # --- Auth setup ---
 DB_NAME = "users.db"
-REGISTRATION_CODE = "CALFCODE823"
+REGISTRATION_CODE = "YOUR_REGISTRATION_CODE"
 
 
 def init_db():
