@@ -474,7 +474,7 @@ def RenderBody(selected_sprint_id=None, project_key=None, fix_version=None, epic
 
             # st.success(f"Remaining Contingency: {round(remaining_contingency, 2)} hrs")
             if remaining_contingency >= contingency_hours:
-                st.success(f"✅ Remaining Contingency: {round(remaining_contingency, 2)} hrs, we gained {round(total_overage, 2)} hrs")
+                st.success(f"✅ Remaining Contingency: {round(remaining_contingency, 2)} hrs, we gained {round(abs(total_overage), 2)} hrs")
             else:
                 st.error(f"⚠️ Remaining Contingency: {round(remaining_contingency, 2)} hrs, we lost {round(total_overage, 2)} hrs")
 
@@ -545,7 +545,7 @@ def RenderBody(selected_sprint_id=None, project_key=None, fix_version=None, epic
 
             # st.success(f"Remaining Contingency: {round(remaining_contingency, 2)} hrs")
             if remaining_contingency >= contingency_hours:
-                st.success(f"✅ Remaining Contingency: {round(remaining_contingency, 2)} hrs, we gained {round(total_overage, 2)} hrs")
+                st.success(f"✅ Remaining Contingency: {round(remaining_contingency, 2)} hrs, we gained {round(abs(total_overage), 2)} hrs")
             else:
                 st.error(f"⚠️ Remaining Contingency: {round(remaining_contingency, 2)} hrs, we lost {round(total_overage, 2)} hrs")
 
@@ -873,7 +873,7 @@ def RenderBody(selected_sprint_id=None, project_key=None, fix_version=None, epic
                     earned_value = assignee_all_tasks[
                         ~assignee_all_tasks["Status"].str.lower().isin(["done", "closed"])
                     ]["Estimated (hrs)"].sum()
-                    st.info(f"📈 Earned Value (Completed Estimates): {round(earned_value, 2)} hrs")
+                    st.success(f"📈 Earned Value (Completed Estimates): {round(earned_value, 2)} hrs")
                     st.error(f"📈 Unearned Value (Incomplete Estimates): {round(unearned_value, 2)} hrs")
 
 
@@ -881,7 +881,7 @@ def RenderBody(selected_sprint_id=None, project_key=None, fix_version=None, epic
                     remaining_contingency = contingency_hours - total_overage
                     # st.success(f"Remaining Contingency: {round(remaining_contingency, 2)} hrs")
                     if remaining_contingency >= contingency_hours:
-                        st.success(f"✅ Contingency gained {round(total_overage, 2)} hrs")
+                        st.success(f"✅ Contingency gained {round(abs(total_overage), 2)} hrs")
                     else:
                         st.error(f"⚠️ Contingency lost {round(total_overage, 2)} hrs")
 
